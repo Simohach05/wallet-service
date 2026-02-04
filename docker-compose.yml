@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # ----------------------------
+  # BASES DE DONNÉES (3 DBs distinctes)
+  # ----------------------------
+  postgres-wallet:
+    image: postgres:15
+    container_name: db_wallet
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=wallet_db
+    ports:
+      - "5432:5432"
+
+  postgres-cagnotte:
+    image: postgres:15
+    container_name: db_cagnotte
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=cagnotte_db
+    ports:
+      - "5433:5432" # Attention au port mapping ! 5433 externe -> 5432 interne
+
+  postgres-identity:
+    image: postgres:15
+    container_name: db_identity
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=identity_db
+    ports:
+      - "5434:5432" # Port 5434
+
+  # ----------------------------
+  # INFRASTRUCTURE KAFKA
+  # ----------------------------
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
