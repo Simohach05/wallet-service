@@ -38,6 +38,7 @@ public class WalletTransaction {
 
     @PrePersist // for sur if timestamp it's work after insertion
     public void prePersist(){
+
         this.timestamp = LocalDateTime.now();
     }
 }
