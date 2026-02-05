@@ -25,7 +25,7 @@ public class WalletController {
     }
     @PostMapping("/credit")
     public ResponseEntity<Wallet> credit(@RequestBody BalanceOperationRequest request){
-        return ResponseEntity.ok(walletService.debitWallet(request));
+        return ResponseEntity.ok(walletService.creditWallet(request));
     }
     @PostMapping("/debit")
     public ResponseEntity<Wallet> debit(@RequestBody BalanceOperationRequest request){
