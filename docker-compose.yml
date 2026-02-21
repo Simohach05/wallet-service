@@ -2,15 +2,15 @@ version: '3.8'
 
 services:
   # ----------------------------
-  # BASES DE DONNÉES (3 DBs distinctes)
+  # 🗄️ DATA BASES (3 DBs distinctes)
   # ----------------------------
   postgres-wallet:
     image: postgres:15
     container_name: db_wallet
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=wallet_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: wallet_db
     ports:
       - "5432:5432"
 
@@ -18,34 +18,48 @@ services:
     image: postgres:15
     container_name: db_cagnotte
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=cagnotte_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cagnotte_db
     ports:
-      - "5433:5432" # Attention au port mapping ! 5433 externe -> 5432 interne
+      - "5433:5432"
 
   postgres-identity:
     image: postgres:15
     container_name: db_identity
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=identity_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: identity_db
     ports:
-      - "5434:5432" # Port 5434
+      - "5434:5432"
 
   # ----------------------------
-  # INFRASTRUCTURE KAFKA
+  # 🛠️ PGADMIN (Web Interface DB)
+  # ----------------------------
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+
+  # ----------------------------
+  # 📡 KAFKA INFRASTRUCTURE
   # ----------------------------
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
     depends_on:
       - zookeeper
@@ -54,6 +68,6 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-

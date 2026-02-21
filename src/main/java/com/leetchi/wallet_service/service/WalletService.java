@@ -75,8 +75,8 @@ public class WalletService {
         //3 send KafkaEvent if the cagnotte (
         if(request.referenceId() != null){
             WalletTransactionEvent event = new WalletTransactionEvent(
-                    tx.getId(),
-                    request.referenceId(),
+                    tx.getId(), // ID transaction
+                    request.referenceId(), //ID cagnotte
                     request.amount(),
                     "DEBIT"
             );
