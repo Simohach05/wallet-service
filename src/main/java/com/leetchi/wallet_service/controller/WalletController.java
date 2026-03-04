@@ -8,10 +8,7 @@ import com.leetchi.wallet_service.repository.WalletRepository;
 import com.leetchi.wallet_service.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/wallets")
@@ -30,5 +27,9 @@ public class WalletController {
     @PostMapping("/debit")
     public ResponseEntity<Wallet> debit(@RequestBody BalanceOperationRequest request){
         return ResponseEntity.ok(walletService.debitWallet(request));
+    }
+    @GetMapping
+    public String testAccesWallet() {
+        return "✅ Congratulations ! you have the gateway and ton Token are validate! welcome in the Wallet !";
     }
 }
