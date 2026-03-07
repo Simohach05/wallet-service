@@ -31,7 +31,7 @@ public class WalletController {
     public ResponseEntity<Wallet> debit(@RequestBody BalanceOperationRequest request){
         return ResponseEntity.ok(walletService.debitWallet(request));
     }
-    @GetMapping("/api/wallets/{id}")
+    @GetMapping("/{id}")
     public Wallet getWalletById(@PathVariable UUID id) {
         return walletRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Wallet not existe!"));}
