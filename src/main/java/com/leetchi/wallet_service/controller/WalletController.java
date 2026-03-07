@@ -10,11 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/wallets")
 @RequiredArgsConstructor
 public class WalletController {
     private final WalletService walletService;
+    private final WalletRepository walletRepository;
 
     @PostMapping
     public ResponseEntity<Wallet> createWallet(@RequestBody WalletRequest request){
@@ -28,8 +31,8 @@ public class WalletController {
     public ResponseEntity<Wallet> debit(@RequestBody BalanceOperationRequest request){
         return ResponseEntity.ok(walletService.debitWallet(request));
     }
-    @GetMapping
-    public String testAccesWallet() {
-        return "✅ Congratulations ! you have the gateway and ton Token are validate! welcome in the Wallet !";
-    }
+    @GetMapping("/api/wallets/{id}")
+    public Wallet getWalletById(@PathVariable UUID id) {
+        return walletRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Wallet not existe!"));}
 }
